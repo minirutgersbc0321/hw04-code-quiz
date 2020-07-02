@@ -38,7 +38,21 @@ function showQuestion(question) {
     answerButtonsElement.appendChild(button)
   })
 }
+function setTime() {
+  var secondsLeft = 6 
+  var timerInterval = setInterval(function() {
+  
+    secondsLeft--
+     console.log(secondsLeft) 
 
+    if(secondsLeft === 0) {
+      clearInterval(timerInterval);
+     
+    }
+
+  }, 1000);
+}
+setTime();
 function resetState() {
   clearStatusClass(document.body)
   nextButton.classList.add('hide')
