@@ -2,7 +2,7 @@ var questions = [
   {
     title: 'What is the correct way to call the random method on the Math global object?',
     code: '',
-    choices: ['A)random.Math()', 'B)Math(randon)', 'C)Math.random()', 'D)math.random()'],
+    choices: ['random.Math()', 'Math(randon)', 'Math.random()', 'Smath.random()'],
     answer: 'Math.random()'
   },
   {
