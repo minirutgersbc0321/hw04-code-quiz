@@ -1,128 +1,116 @@
-var startButton = document.getElementById('start-btn')
-var nextButton = document.getElementById('next-btn')
-var questionContainerElement = document.getElementById('question-container')
-var questionElement = document.getElementById('question')
-var answerButtonsElement = document.getElementById('answer-buttons')
+// variables to keep track of quiz state
+var startBtn = document.getElementById("startBtn");
+var submitBtn = document.querySelector("button.submitBtn")
+var secondsLeft = (questions.length * 15 + 1);
+var timerEl = document.getElementById("timer");
+var submitScoreEl = document.querySelector("#submit-score");
+var userScoreEl = document.getElementById("user-score");
+var userNameInput;
+var questionHead = document.getElementById("questions");
+var answerChoices = document.getElementById("answers");
 
-let shuffledQuestions, currentQuestionIndex
+var questionNumber = -1;
+var answer;
 
-startButton.addEventListener('click', startGame)
-nextButton.addEventListener('click', () => {
-  currentQuestionIndex++
-  setNextQuestion()
-})
 
-function startGame() {
-  startButton.classList.add('hide')
-  shuffledQuestions = questions.sort(() => Math.random() - .5)
-  currentQuestionIndex = 0
-  questionContainerElement.classList.remove('hide')
-  setNextQuestion()
+function startTimer() {
+    // swap welcome msg w/ questions
+    document.getElementById("home").classList.add('d-none');
+    document.getElementById("quiz").classList.remove('d-none');
+
+    // timer set and begins 90s countdown
+    setTimer();
+    // create questions to display
+    makeQuestions();
 }
 
-function setNextQuestion() {
-  resetState()
-  showQuestion(shuffledQuestions[currentQuestionIndex])
+function setTimer() {
+
+    var countdown = setInterval(function () {
+        secondsLeft--;
+        timerEl.textContent = "Time: " + secondsLeft;
+
+        if (secondsLeft === 0 || questionNumber === questions.length) {
+            clearInterval(countdown);
+            setTimeout(displayScore, 500);
+        }
+    }, 1000);
 }
 
-function showQuestion(question) {
-  questionElement.innerText = question.question
-  question.answers.forEach(answer => {
-    var button = document.createElement('button')
-    button.innerText = answer.text
-    button.classList.add('btn')
-    if (answer.correct) {
-      button.dataset.correct = answer.correct
+function makeQuestions() {
+    questionNumber++;
+    answer = questions[questionNumber].answer
+
+    questionHead.textContent = questions[questionNumber].title;
+    answerChoices.innerHTML = "";
+
+    var choices = questions[questionNumber].choices;
+
+    for (var q = 0; q < choices.length; q++) {
+        var nextChoice = document.createElement("button");
+
+        nextChoice.textContent = choices[q]
+        answerBtn = answerChoices.appendChild(nextChoice).setAttribute("class", "p-3 m-1 btn btn-light btn-block");
     }
-    button.addEventListener('click', selectAnswer)
-    answerButtonsElement.appendChild(button)
-  })
-}
-function setTime() {
-  var secondsLeft = 6 
-  var timerInterval = setInterval(function() {
-  
-    secondsLeft--
-     console.log(secondsLeft) 
-
-    if(secondsLeft === 0) {
-      clearInterval(timerInterval);
-     
-    }
-
-  }, 1000);
-}
-setTime();
-function resetState() {
-  clearStatusClass(document.body)
-  nextButton.classList.add('hide')
-  while (answerButtonsElement.firstChild) {
-    answerButtonsElement.removeChild(answerButtonsElement.firstChild)
-  }
 }
 
-function selectAnswer(e) {
-  var selectedButton = e.target
- var correct = selectedButton.dataset.correct
-  setStatusClass(document.body, correct)
-  Array.from(answerButtonsElement.children).forEach(button => {
-    setStatusClass(button, button.dataset.correct)
-  })
-  if (shuffledQuestions.length > currentQuestionIndex + 1) {
-    nextButton.classList.remove('hide')
-  }
-}
-function printHighscores() {
-  // 1. either get scores from localstorage or set to empty array
-  //    assign it to var highscores
-
-  // sort highscores by score property in descending order
-  highscores.sort(function (a, b) {
-    return b.score - a.score;
-  });
-
-  highscores.forEach(function (score) {
-    // 1. create li tag for each high score
-
-    // 2. set the content of li tag to initials and score
-
-    // 3. grab element highscore and store it to var olEl for display purpose
-    var olEl = document.getElementById("highscores");
-
-    // 4. disply on page by appending li tag to olEl using appendChild
-  });
+// display option to enter name to scoreboard
+function displayScore() {
+    document.getElementById("quiz").classList.add('d-none');
+    document.getElementById("submit-score").classList.remove('d-none');
+    userScoreEl.textContent = "Your final score is " + secondsLeft + ".";
 }
 
-function setStatusClass(element, correct) {
-  clearStatusClass(element)
-  if (correct) {
-    element.classList.add('correct')
-  } else {
-    element.classList.add('wrong')
-  }
+// Event Listeners for Main Buttons
+startBtn.addEventListener("click", startTimer);
+submitBtn.addEventListener("click", function (event) {
+    event.stopPropagation();
+    addScore();
+    
+    window.location.href = './highscores.html'
+});
+
+function addScore () {
+    userNameInput = document.getElementById("userName").value
+    
+    // create a new object with name and score keys
+var newScore = {
+        name: userNameInput,
+        score: secondsLeft
+    };
+    // check if there are scores in local storage first(get it)
+    //if not, make a new/blank array
+    var highScores = JSON.parse(localStorage.getItem("highScores") || "[]");
+    // push object into score array
+    highScores.push(newScore)
+    // turn objects into an array of strings then put it into local storage
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+
 }
 
-function clearStatusClass(element) {
-  element.classList.remove('correct')
-  element.classList.remove('wrong')
+function hideFeedback(){
+    var pEl= document.getElementsByClassName("feedback")[0]
+    pEl.style.display='none'
 }
 
-const questions = [
+function showFeedback(){
+    var pEl= document.getElementsByClassName("feedback")[0]
+    pEl.removeAttribute('style');
+}
 
-  {
-    question: 'Is web development fun?',
-    answers: [
-      { text: 'Kinda', correct: false },
-      { text: 'YES!!!', correct: true },
-      { text: 'Um no', correct: false },
-      { text: 'IDK', correct: false }
-    ]
-  },
-  {
-    question: 'What is 4 * 2?',
-    answers: [
-      { text: '6', correct: false },
-      { text: '8', correct: true }
-    ]
-  }
-]
+answerChoices.addEventListener("click", function (event) {
+    var pEl= document.getElementsByClassName("feedback")[0]
+    
+    // evaluation of user's answer choices & feedback
+    if (answer === event.target.textContent) {   
+        pEl.innerHTML = "Correct!";
+        setTimeout(hideFeedback,1000);
+        showFeedback();   
+    } else {
+        pEl.innerHTML = "Sorry, that's incorrect.";
+        setTimeout(hideFeedback,1000);
+        secondsLeft = secondsLeft - 10;
+        showFeedback();
+    }    
+    makeQuestions();
+});

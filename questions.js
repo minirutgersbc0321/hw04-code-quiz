@@ -2,7 +2,7 @@ var questions = [
   {
     title: 'What is the correct way to call the random method on the Math global object?',
     code: '',
-    choices: ['random.Math()', 'Math(randon)', 'Math.random()', 'math.random()'],
+    choices: ['A)random.Math()', 'B)Math(randon)', 'C)Math.random()', 'D)math.random()'],
     answer: 'Math.random()'
   },
   {
@@ -102,5 +102,36 @@ var questions = [
       "const myName = 'Sloan'"
     ],
     answer: "let myName = 'Sloan'"
-  }
+  },
+    {
+        title: "Primarily, inside which tag of an HTML document do you put the JavaScript?",
+        choices: ["<java>", "<body>", "<script>", "<img>"],
+        answer: "<script>"
+    },
+    {
+        title: "The condition in an if/else statement is enclosed within ______.",
+        choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
+        answer: "parentheses"
+    },
+    {
+        title: "What is the syntax for referencing an external script called 'abc.js'?",
+        choices: ["<script class='abc.js'>", "<script href='abc.js'>", "<script link='abc.js'>", "<script src='abc.js'>"],
+        answer: "<script src='abc.js'>"
+    },
+    {
+        title: "Which type of pop up box will allow a user to type a response?",
+        choices: ["input", "prompt", "alert", "confirm"],
+        answer: "prompt"
+    },
+    {
+        title: "What is a DOM in JavaScript?",
+        choices: ["Data of Mine", "Document of Master", "Data Object Modal", "Document Object Model"],
+        answer: "Document Object Model"
+    },
+    {
+        title: "Is JS case-sensitive?",
+        choices: ["Yes", "No", "I have no clue", "Only when it feels like it."],
+        answer: "Yes"
+    },
+
 ]
